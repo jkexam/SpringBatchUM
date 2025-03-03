@@ -9,6 +9,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -66,6 +67,22 @@ public class FirstBatch {
                 .repository(beforeRepository)
                 .sorts(Map.of("id", Sort.Direction.ASC))
                 .build();
+    }
+
+    @Bean
+    public ItemProcessor<BeforeEntity, AfterEntity> middleProcessor() {
+
+        return new ItemProcessor<BeforeEntity, AfterEntity>() {
+
+            @Override
+            public AfterEntity process(BeforeEntity item) throws Exception {
+
+                AfterEntity afterEntity = new AfterEntity();
+                afterEntity.setUsername(item.getUsername());
+
+                return afterEntity;
+            }
+        };
     }
 
 }
