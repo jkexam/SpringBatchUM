@@ -53,9 +53,9 @@ public class FirstBatch {
 
         return new StepBuilder("firstStep", jobRepository)
                 .<BeforeEntity, AfterEntity> chunk(10, platformTransactionManager)
-//                .reader("배치대상정보 읽기 메서드")
-//                .processor("배치 처리 메서드")
-//                .writer("배치대상정보 쓰기 메서드")
+                .reader(beforeReader())
+                .processor(middleProcessor())
+                .writer(afterWriter())
                 .build();
 
     }
