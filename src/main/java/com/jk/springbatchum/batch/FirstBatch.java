@@ -9,9 +9,14 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.data.RepositoryItemReader;
+import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import java.util.Map;
 
 
 @Configuration
@@ -50,6 +55,17 @@ public class FirstBatch {
 //                .writer("배치대상정보 쓰기 메서드")
                 .build();
 
+    }
+
+    @Bean
+    public RepositoryItemReader<BeforeEntity> beforeReader(){
+        return new RepositoryItemReaderBuilder<BeforeEntity>()
+                .name("beforeReader")
+                .pageSize(10)
+                .methodName("findAll")
+                .repository(beforeRepository)
+                .sorts(Map.of("id", Sort.Direction.ASC))
+                .build();
     }
 
 }
