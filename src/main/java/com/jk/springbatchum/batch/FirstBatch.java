@@ -11,7 +11,9 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.RepositoryItemReader;
+import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
+import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
@@ -85,4 +87,12 @@ public class FirstBatch {
         };
     }
 
+    @Bean
+    public RepositoryItemWriter<AfterEntity> afterWriter() {
+
+        return new RepositoryItemWriterBuilder<AfterEntity>()
+                .repository(afterRepository)
+                .methodName("save")
+                .build();
+    }
 }
