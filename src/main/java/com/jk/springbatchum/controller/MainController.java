@@ -37,12 +37,25 @@ public class MainController {
     @GetMapping("/second")
     public String secondApi(@RequestParam("value") String value) throws Exception {
 
-        System.out.println("firstApi.value : "+value);
+        System.out.println("secondApi.value : "+value);
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("date", value)
                 .toJobParameters();
 
         jobLauncher.run(jobRegistry.getJob("secondJob"), jobParameters);
+
+        return "ok";
+    }
+
+    @GetMapping("/fourth")
+    public String fourthApi(@RequestParam("value") String value) throws Exception {
+
+        System.out.println("fourthApi.value : "+value);
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("date", value)
+                .toJobParameters();
+
+        jobLauncher.run(jobRegistry.getJob("fourthJob"), jobParameters);
 
         return "ok";
     }
