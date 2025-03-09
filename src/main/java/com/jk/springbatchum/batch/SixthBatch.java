@@ -92,23 +92,23 @@ public class SixthBatch {
         return new StepBuilder("sixthStep", jobRepository)
                 .<BeforeEntity, AfterEntity> chunk(10, platformTransactionManager)
                 .reader(beforeSixthReader())
-                .processor(middleProcessor())
+                .processor(middleSixthProcessor())
                 .writer(afterSixthWriter())
                 .build();
-
     }
 
-//    @Bean
-//    public RepositoryItemReader<BeforeEntity> beforeSixthReader() {
-//
-//        return new RepositoryItemReaderBuilder<BeforeEntity>()
-//                .name("beforeReader")
-//                .pageSize(10)
-//                .methodName("findAll")
-//                .repository(beforeRepository)
-//                .sorts(Map.of("id", Sort.Direction.ASC))
-//                .build();
-//    }
+    //    @Bean
+    //    public RepositoryItemReader<BeforeEntity> beforeSixthReader() {
+    //
+    //        return new RepositoryItemReaderBuilder<BeforeEntity>()
+    //                .name("beforeReader")
+    //                .pageSize(10)
+    //                .methodName("findAll")
+    //                .repository(beforeRepository)
+    //                .sorts(Map.of("id", Sort.Direction.ASC))
+    //                .build();
+    //    }
+
     @Bean
     public JdbcPagingItemReader<BeforeEntity> beforeSixthReader() {
 
@@ -124,7 +124,7 @@ public class SixthBatch {
     }
 
     @Bean
-    public ItemProcessor<BeforeEntity, AfterEntity> middleProcessor() {
+    public ItemProcessor<BeforeEntity, AfterEntity> middleSixthProcessor() {
 
         return new ItemProcessor<BeforeEntity, AfterEntity>() {
 
@@ -139,14 +139,15 @@ public class SixthBatch {
         };
     }
 
-//    @Bean
-//    public RepositoryItemWriter<AfterEntity> afterSixthWriter() {
-//
-//        return new RepositoryItemWriterBuilder<AfterEntity>()
-//                .repository(afterRepository)
-//                .methodName("save")
-//                .build();
-//    }
+    //    @Bean
+    //    public RepositoryItemWriter<AfterEntity> afterSixthWriter() {
+    //
+    //        return new RepositoryItemWriterBuilder<AfterEntity>()
+    //                .repository(afterRepository)
+    //                .methodName("save")
+    //                .build();
+    //    }
+
     @Bean
     public JdbcBatchItemWriter<AfterEntity> afterSixthWriter() {
 
