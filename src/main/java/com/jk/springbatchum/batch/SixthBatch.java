@@ -2,6 +2,7 @@ package com.jk.springbatchum.batch;
 
 import com.jk.springbatchum.entity.AfterEntity;
 import com.jk.springbatchum.entity.BeforeEntity;
+import com.jk.springbatchum.entity.CustomBeforeRowMapper;
 import com.jk.springbatchum.repository.AfterRepository;
 import com.jk.springbatchum.repository.BeforeRepository;
 import org.springframework.batch.core.Job;
@@ -12,14 +13,14 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.data.RepositoryItemReader;
-import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
-import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
+import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -95,31 +96,31 @@ public class SixthBatch {
                 .build();
     }
 
-    @Bean
-    public RepositoryItemReader<BeforeEntity> beforeSixthReader() {
-
-        return new RepositoryItemReaderBuilder<BeforeEntity>()
-                .name("beforeReader")
-                .pageSize(10)
-                .methodName("findAll")
-                .repository(beforeRepository)
-                .sorts(Map.of("id", Sort.Direction.ASC))
-                .build();
-    }
-
 //    @Bean
-//    public JdbcPagingItemReader<BeforeEntity> beforeSixthReader() {
+//    public RepositoryItemReader<BeforeEntity> beforeSixthReader() {
 //
-//        return new JdbcPagingItemReaderBuilder<BeforeEntity>()
-//                .name("beforeSixthReader")
-//                .dataSource(dataSource)
-//                .selectClause("SELECT id, username")
-//                .fromClause("FROM BeforeEntity")
-//                .sortKeys(Map.of("id", Order.ASCENDING))
-//                .rowMapper(new CustomBeforeRowMapper())
+//        return new RepositoryItemReaderBuilder<BeforeEntity>()
+//                .name("beforeReader")
 //                .pageSize(10)
+//                .methodName("findAll")
+//                .repository(beforeRepository)
+//                .sorts(Map.of("id", Sort.Direction.ASC))
 //                .build();
 //    }
+
+    @Bean
+    public JdbcPagingItemReader<BeforeEntity> beforeSixthReader() {
+
+        return new JdbcPagingItemReaderBuilder<BeforeEntity>()
+                .name("beforeSixthReader")
+                .dataSource(dataSource)
+                .selectClause("SELECT id, username")
+                .fromClause("FROM BeforeEntity")
+                .sortKeys(Map.of("id", Order.ASCENDING))
+                .rowMapper(new CustomBeforeRowMapper())
+                .pageSize(10)
+                .build();
+    }
 
     @Bean
     public ItemProcessor<BeforeEntity, AfterEntity> middleSixthProcessor() {
@@ -137,24 +138,24 @@ public class SixthBatch {
         };
     }
 
-    @Bean
-    public RepositoryItemWriter<AfterEntity> afterSixthWriter() {
-
-        return new RepositoryItemWriterBuilder<AfterEntity>()
-                .repository(afterRepository)
-                .methodName("save")
-                .build();
-    }
-
 //    @Bean
-//    public JdbcBatchItemWriter<AfterEntity> afterSixthWriter() {
+//    public RepositoryItemWriter<AfterEntity> afterSixthWriter() {
 //
-//        String sql = "INSERT INTO AfterEntity (username) VALUES (:username)";
-//
-//        return new JdbcBatchItemWriterBuilder<AfterEntity>()
-//                .dataSource(dataSource)
-//                .sql(sql)
-//                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+//        return new RepositoryItemWriterBuilder<AfterEntity>()
+//                .repository(afterRepository)
+//                .methodName("save")
 //                .build();
 //    }
+
+    @Bean
+    public JdbcBatchItemWriter<AfterEntity> afterSixthWriter() {
+
+        String sql = "INSERT INTO AfterEntity (username) VALUES (:username)";
+
+        return new JdbcBatchItemWriterBuilder<AfterEntity>()
+                .dataSource(dataSource)
+                .sql(sql)
+                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                .build();
+    }
 }
