@@ -72,4 +72,17 @@ public class MainController {
 
         return "ok";
     }
+
+    @GetMapping("/sixth")
+    private String sixthApi(@RequestParam("value") String value) throws Exception {
+
+        System.out.println("sixthApi.value : "+value);
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("date", value)
+                .toJobParameters();
+
+        jobLauncher.run(jobRegistry.getJob("sixthJob"), jobParameters);
+
+        return "ok";
+    }
 }
