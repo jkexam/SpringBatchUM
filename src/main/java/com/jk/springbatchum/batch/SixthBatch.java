@@ -53,15 +53,16 @@ public class SixthBatch {
 
         return new StepBuilder("sixthStep", jobRepository)
                 .<BeforeEntity, AfterEntity> chunk(10, platformTransactionManager)
-                .reader(beforeReader())
+                .reader(beforeSixthReader())
                 .processor(middleProcessor())
-                .writer(afterWriter())
+                .writer(afterSixthWriter())
                 .build();
 
     }
 
     @Bean
-    public RepositoryItemReader<BeforeEntity> beforeReader(){
+    public RepositoryItemReader<BeforeEntity> beforeSixthReader() {
+
         return new RepositoryItemReaderBuilder<BeforeEntity>()
                 .name("beforeReader")
                 .pageSize(10)
@@ -88,7 +89,7 @@ public class SixthBatch {
     }
 
     @Bean
-    public RepositoryItemWriter<AfterEntity> afterWriter() {
+    public RepositoryItemWriter<AfterEntity> afterSixthWriter() {
 
         return new RepositoryItemWriterBuilder<AfterEntity>()
                 .repository(afterRepository)
